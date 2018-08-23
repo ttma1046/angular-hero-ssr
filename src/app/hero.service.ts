@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, Inject } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
@@ -16,10 +17,12 @@ export class HeroService {
 
   private heroesUrl = 'api/heroes';  // URL to web api
 
-  constructor(
-    private http: HttpClient,
-    private messageService: MessageService) { }
-
+constructor(
+  private http: HttpClient,
+  private messageService: MessageService,
+  @Optional() @Inject(APP_BASE_HREF) origin: string) {
+    this.heroesUrl = `${origin}${this.heroesUrl}`;
+  }
   /** GET heroes from the server */
   getHeroes (): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
